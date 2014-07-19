@@ -1,3 +1,9 @@
 function test_compression
-  generate_audio(32, 441000);
+  files = generate_audio(32, 44100);
+
+  settings = compressor.settings();
+  settings.threshold = -6;
+  settings.ratio = 2;
+
+  compressor.compress_files(files, settings, 32, 44100);
 end

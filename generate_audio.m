@@ -1,15 +1,16 @@
-function generate_audio(bits, samplerate)
+function files = generate_audio(bits, samplerate)
   if not(isdir('audio'))
     mkdir('audio');
   end
 
-  generate_sinewaves(bits, samplerate, 220);
+  files = generate_sinewaves(bits, samplerate, 220);
 end
 
 
-function generate_sinewaves(bits, samplerate, frequency)
+function files = generate_sinewaves(bits, samplerate, frequency)
   utils = utilities;
 
+  files = {};
   sample_points = utils.samplepoints(5000, samplerate);
 
   fprintf(1, 'generate regular sin waves\n');
@@ -21,8 +22,9 @@ function generate_sinewaves(bits, samplerate, frequency)
     fprintf(1, '  dB: %3i | dB factor: %0.2f\n', db, utils.db2amplitude(db));
     fprintf(1, '    max: %i | min: %i\n', max(samples), min(samples));
 
-    filename = sprintf('audio/sin_%idB.wav', db);
+    filename = fullfile('audio', sprintf('sin_%idB.wav', db));
     wavwrite(samples, samplerate, bits, filename);
+    files = [files; filename];
   end
 
   fprintf(1, '\n');
@@ -50,8 +52,9 @@ function generate_sinewaves(bits, samplerate, frequency)
     fprintf(1, '  dB low: %3i (factor %0.2f) | dB high: %3i (factor %0.2f)\n',
             db_jump(1), amplitudes(1), db_jump(2), amplitudes(2));
 
-    filename = sprintf('audio/sin_%idB_to_%idB.wav', db_jump(1), db_jump(2));
+    filename = fullfile('audio', sprintf('sin_%idB_to_%idB.wav', db_jump(1), db_jump(2)));
     wavwrite(samples, samplerate, bits, filename);
+    files = [files; filename];
   end
 
   fprintf(1, '\n');
